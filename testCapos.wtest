@@ -57,3 +57,46 @@ describe "1.1 - Rolando" {
     assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.artefactos())
   }
 }
+
+describe "1.2 - Castillo de piedra" {
+  method llenarMochila() {
+    rolando.encontrar(espadaDelDestino)
+    rolando.encontrar(libroDeHechizos)
+  }
+  
+  test "El hogar inicia sin artefactos" {
+    assert.equals(0, rolando.hogar().artefactos().size())
+  }
+
+  test "Se guarda un artefacto en el hogar" {
+    rolando.hogar().guardar(#{espadaDelDestino})
+
+    assert.that(rolando.hogar().artefactos().contains(espadaDelDestino))
+  }
+  
+  test "Rolando llega al hogar con un artefacto y lo guarda en él" {
+    rolando.encontrar(espadaDelDestino)
+    
+    rolando.llegarAlHogar()
+    
+    assert.that(rolando.hogar().artefactos().contains(espadaDelDestino))
+  }
+  
+  test "Rolando llega al hogar con un artefacto y vacía la mochila" {
+    rolando.encontrar(espadaDelDestino)
+    
+    rolando.llegarAlHogar()
+    
+    assert.notThat(rolando.hayArtefactos())
+  }
+  
+  test "Se conocen los artefactos que hay en el hogar" {
+    self.llenarMochila()
+    rolando.llegarAlHogar()
+    
+    assert.equals(
+      #{espadaDelDestino, libroDeHechizos},
+      rolando.hogar().artefactos()
+    )
+  }
+}

@@ -1,12 +1,16 @@
 import artefacto.*
+import castillo.*
 
 object rolando {
   const mochila = #{}
   var capacidadMochila = 2
+  const hogar = castilloDePiedra
   
   method artefactos() = mochila
   
   method capacidadMochila() = capacidadMochila
+  
+  method hogar() = hogar
   
   method incrementarCapacidad(_capacidadExtra) {
     if (_capacidadExtra < 0) self.error(
@@ -28,5 +32,18 @@ object rolando {
       )
     
     mochila.add(artefacto)
+  }
+  
+  method llegarAlHogar() {
+    if (self.hayArtefactos()) {
+      hogar.guardar(self.artefactos())
+      self.vaciarMochila()
+    }
+  }
+  
+  method hayArtefactos() = not mochila.isEmpty()
+  
+  method vaciarMochila() {
+    mochila.clear()
   }
 }
