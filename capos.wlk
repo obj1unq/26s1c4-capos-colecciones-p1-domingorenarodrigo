@@ -46,4 +46,8 @@ object rolando {
   method vaciarMochila() {
     mochila.clear()
   }
+
+  method posesiones() = self.artefactos() + hogar.artefactos()
+
+  method posee(artefacto) = self.posesiones().contains(artefacto)
 }

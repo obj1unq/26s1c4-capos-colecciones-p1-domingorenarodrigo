@@ -11,12 +11,18 @@ describe "1.1 - Rolando" {
     assert.equals(2, rolando.capacidadMochila())
   }
   
-  test "Inicia sin artefactos" {
-    assert.equals(0, rolando.artefactos().size())
-  }
-  
   test "Inicia con capacidad en la mochila para recolectar artefactos" {
     assert.that(rolando.hayCapacidad())
+  }
+  
+  test "Se conocen los artefactos que lleva en la mochila" {
+    self.llenarMochila()
+    
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.artefactos())
+  }
+  
+  test "Inicia sin artefactos" {
+    assert.equals(0, rolando.artefactos().size())
   }
   
   test "Se incrementa la capacidad de la mochila" {
@@ -50,12 +56,6 @@ describe "1.1 - Rolando" {
       { rolando.recolectar(collarDivino) }
     )
   }
-  
-  test "Se conocen los artefactos que lleva en la mochila" {
-    self.llenarMochila()
-    
-    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.artefactos())
-  }
 }
 
 describe "1.2 - Castillo de piedra" {
@@ -64,13 +64,23 @@ describe "1.2 - Castillo de piedra" {
     rolando.encontrar(libroDeHechizos)
   }
   
+  test "Se conocen los artefactos que hay en el hogar" {
+    self.llenarMochila()
+    rolando.llegarAlHogar()
+    
+    assert.equals(
+      #{espadaDelDestino, libroDeHechizos},
+      rolando.hogar().artefactos()
+    )
+  }
+  
   test "El hogar inicia sin artefactos" {
     assert.equals(0, rolando.hogar().artefactos().size())
   }
-
+  
   test "Se guarda un artefacto en el hogar" {
     rolando.hogar().guardar(#{espadaDelDestino})
-
+    
     assert.that(rolando.hogar().artefactos().contains(espadaDelDestino))
   }
   
@@ -89,14 +99,28 @@ describe "1.2 - Castillo de piedra" {
     
     assert.notThat(rolando.hayArtefactos())
   }
-  
-  test "Se conocen los artefactos que hay en el hogar" {
-    self.llenarMochila()
+}
+
+describe "1.3 - Saber qué artefactos tiene Rolando" {
+  test "Se conocen los artefactos que posee" {
+    rolando.encontrar(espadaDelDestino)
+    rolando.encontrar(libroDeHechizos)
     rolando.llegarAlHogar()
+    rolando.encontrar(collarDivino)
     
     assert.equals(
-      #{espadaDelDestino, libroDeHechizos},
-      rolando.hogar().artefactos()
+      #{espadaDelDestino, libroDeHechizos, collarDivino},
+      rolando.posesiones()
     )
+  }
+  
+  test "Se sabe si posee un artefacto" {
+    rolando.encontrar(espadaDelDestino)
+    
+    assert.that(rolando.posee(espadaDelDestino))
+  }
+  
+  test "Se sabe si no posee un artefacto" {
+    assert.notThat(rolando.posee(espadaDelDestino))
   }
 }
