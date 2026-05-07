@@ -1,0 +1,59 @@
+import capos.*
+import artefacto.*
+
+describe "1.1 - Rolando" {
+  method llenarMochila() {
+    rolando.encontrar(espadaDelDestino)
+    rolando.encontrar(libroDeHechizos)
+  }
+  
+  test "Al inicio solo puede recolectar hasta 2 artefactos" {
+    assert.equals(2, rolando.capacidadMochila())
+  }
+  
+  test "Inicia sin artefactos" {
+    assert.equals(0, rolando.artefactos().size())
+  }
+  
+  test "Inicia con capacidad en la mochila para recolectar artefactos" {
+    assert.that(rolando.hayCapacidad())
+  }
+  
+  test "Se incrementa la capacidad de la mochila" {
+    const inicial = rolando.capacidadMochila()
+    const extra = 3
+    
+    rolando.incrementarCapacidad(extra)
+    
+    assert.equals(inicial + extra, rolando.capacidadMochila())
+  }
+  
+  test "Con capacidad en la mochila, encuentra un artefacto y lo recolecta" {
+    rolando.encontrar(espadaDelDestino)
+    
+    assert.that(rolando.artefactos().contains(espadaDelDestino))
+  }
+  
+  test "Con la mochila llena, encuentra un artefacto y no lo recolecta" {
+    self.llenarMochila()
+    
+    rolando.encontrar(collarDivino)
+    
+    assert.notThat(rolando.artefactos().contains(collarDivino))
+  }
+  
+  test "Con la mochila llena, recolecta un artefacto y hay error" {
+    self.llenarMochila()
+    
+    assert.throwsExceptionWithMessage(
+      "No se puede recolectar con la mochila llena",
+      { rolando.recolectar(collarDivino) }
+    )
+  }
+  
+  test "Se conocen los artefactos que lleva en la mochila" {
+    self.llenarMochila()
+    
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.artefactos())
+  }
+}
