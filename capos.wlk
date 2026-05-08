@@ -4,26 +4,27 @@ import castillo.*
 object rolando {
   const mochila = #{}
   var capacidadMochila = 2
-  const hogar = castilloDePiedra
+  const property hogar = castilloDePiedra
+  const property historialDeEncuentros = []
   
   method artefactos() = mochila
   
   method capacidadMochila() = capacidadMochila
   
-  method hogar() = hogar
-  
-  method incrementarCapacidad(_capacidadExtra) {
-    if (_capacidadExtra < 0) self.error(
+  method incrementarCapacidad(capacidadExtra) {
+    if (capacidadExtra < 0) self.error(
         "La capacidad a incrementar no puede ser negativa"
       )
     
-    capacidadMochila += _capacidadExtra
+    capacidadMochila += capacidadExtra
   }
   
   method hayCapacidad() = capacidadMochila > mochila.size()
   
   method encontrar(artefacto) {
     if (self.hayCapacidad()) self.recolectar(artefacto)
+    
+    self.registrarEnHistorial(artefacto)
   }
   
   method recolectar(artefacto) {
@@ -32,6 +33,10 @@ object rolando {
       )
     
     mochila.add(artefacto)
+  }
+  
+  method registrarEnHistorial(artefacto) {
+    historialDeEncuentros.add(artefacto)
   }
   
   method llegarAlHogar() {
@@ -46,8 +51,8 @@ object rolando {
   method vaciarMochila() {
     mochila.clear()
   }
-
+  
   method posesiones() = self.artefactos() + hogar.artefactos()
-
+  
   method posee(artefacto) = self.posesiones().contains(artefacto)
 }

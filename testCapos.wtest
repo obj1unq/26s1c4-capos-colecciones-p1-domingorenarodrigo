@@ -124,3 +124,41 @@ describe "1.3 - Saber qué artefactos tiene Rolando" {
     assert.notThat(rolando.posee(espadaDelDestino))
   }
 }
+
+describe "1.4 - Saber la historia de los encuentros con los artefactos" {
+  test "Se conoce el historial de encuentros de artefactos" {
+    rolando.encontrar(espadaDelDestino)
+    rolando.encontrar(libroDeHechizos)
+    rolando.encontrar(collarDivino)
+    rolando.llegarAlHogar()
+    rolando.encontrar(armaduraDeAceroValyrio)
+    rolando.encontrar(collarDivino)
+    
+    assert.equals(
+      [
+        espadaDelDestino,
+        libroDeHechizos,
+        collarDivino,
+        armaduraDeAceroValyrio,
+        collarDivino
+      ],
+      rolando.historialDeEncuentros()
+    )
+  }
+
+  test "El historial de encuentros inicia vacío" {
+    assert.equals(0, rolando.historialDeEncuentros().size())
+  }
+
+  test "Se encuentra un artefacto y se registra en el historial de encuentros" {
+    rolando.encontrar(espadaDelDestino)
+
+    assert.that(rolando.historialDeEncuentros().contains(espadaDelDestino))
+  }
+
+  test "Se registra un artefacto en el historial de encuentros" {
+    rolando.registrarEnHistorial(libroDeHechizos)
+
+    assert.that(rolando.historialDeEncuentros().contains(libroDeHechizos))
+  }
+}
