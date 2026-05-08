@@ -1,28 +1,27 @@
 import mochila.*
 import castillo.*
 import artefacto.*
+import historial.*
 
 object rolando {
   const mochilaContenedora = mochila
   const hogar = castilloDePiedra
-  const property historialDeEncuentros = []
+  const historialDeEncuentros = historial
   
   method artefactosEnMochila() = mochilaContenedora.artefactos()
 
   method artefactosEnHogar() = hogar.artefactos() 
+
+  method artefactosEnHistorial() = historialDeEncuentros.artefactos()
   
   method encontrar(artefacto) {
     if (mochilaContenedora.tieneCapacidad()) self.recolectar(artefacto)
     
-    self.registrarEnHistorial(artefacto)
+    historialDeEncuentros.registrar(artefacto)
   }
   
   method recolectar(artefacto) {
     mochilaContenedora.guardarArtefacto(artefacto)
-  }
-  
-  method registrarEnHistorial(artefacto) {
-    historialDeEncuentros.add(artefacto)
   }
   
   method llegarAlHogar() {
@@ -34,7 +33,7 @@ object rolando {
     mochilaContenedora.vaciar()
   }
 
-  method posesiones() = self.artefactosEnMochila() + self.artefactosEnHogar()()
+  method posesiones() = self.artefactosEnMochila() + self.artefactosEnHogar()
   
   method posee(artefacto) = self.posesiones().contains(artefacto)
 }
