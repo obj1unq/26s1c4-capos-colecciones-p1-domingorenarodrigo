@@ -1,9 +1,7 @@
 object castilloDePiedra {
-  const almacen = #{}
+  const property artefactos = #{}
   
-  method artefactos() = almacen
-
-  method guardar(artefactos) {
-    artefactos.forEach({ artefacto => almacen.add(artefacto) })
+  method guardar(_artefactos) {
+    _artefactos.forEach({ artefacto => artefactos.add(artefacto) })
   }
 }
