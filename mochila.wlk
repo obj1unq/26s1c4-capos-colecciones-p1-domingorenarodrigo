@@ -1,8 +1,14 @@
-object mochila {
+object mochilaDeRolando {
   const property artefactos = #{}
-  var capacidad = 2
+  var property capacidad = 2
   
-  method capacidad() = capacidad
+  method capacidad(_capacidad) {
+    if (_capacidad < 0) self.error(
+      "No se puede configurar una capacidad negativa"
+    )
+
+    capacidad = _capacidad
+  }
   
   method incrementarCapacidad(capacidadExtra) {
     if (capacidadExtra < 0) self.error(
@@ -14,16 +20,16 @@ object mochila {
   
   method tieneCapacidad() = capacidad > artefactos.size()
   
-  method tieneArtefactos() = not artefactos.isEmpty()
+  method poseeArtefactos() = not artefactos.isEmpty()
   
-  method guardarArtefacto(artefacto) {
+  method guardar(artefacto) {
     if (not self.tieneCapacidad()) self.error(
-        "La mochila no tiene capacidad para un nuevo artefacto"
+        "La mochila no tiene capacidad para guardar un nuevo artefacto"
       )
     
     artefactos.add(artefacto)
   }
-  
+   
   method vaciar() {
     artefactos.clear()
   }

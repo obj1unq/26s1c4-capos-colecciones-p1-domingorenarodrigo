@@ -1,3 +1,5 @@
+// commit -m "Refactorización de objetos para mantener coherencia y estructura de tests antes de resolver Parte 2"
+
 import capos.*
 import artefacto.*
 import mochila.*
@@ -5,214 +7,355 @@ import castillo.*
 import historial.*
 
 describe "1.1 - Rolando" {
+  const mochila = mochilaDeRolando
+  const capacidadInicial = 2
+  
   method llenarMochila() {
-    mochila.guardarArtefacto(espadaDelDestino)
-    mochila.guardarArtefacto(libroDeHechizos)
+    mochila.guardar(espadaDelDestino)
+    mochila.guardar(libroDeHechizos)
   }
   
-  method llenarMochilaDeRolando() {
-    rolando.encontrar(espadaDelDestino)
-    rolando.encontrar(libroDeHechizos)
-  }
-  
-  test "Al inicio, la mochila tiene capacidad para guardar hasta 2 artefactos" {
-    assert.equals(2, mochila.capacidad())
-  }
-  
-  test "La mochila inicia sin artefactos" {
-    assert.equals(0, mochila.artefactos().size())
-  }
-  
-  test "La mochila inicia con capacidad para guardar artefactos" {
+  test "La Mochila indica si tiene capacidad" {
     assert.that(mochila.tieneCapacidad())
   }
   
-  test "Se incrementa la capacidad de la mochila" {
-    const inicial = mochila.capacidad()
-    const extra = 3
-    
-    mochila.incrementarCapacidad(extra)
-    
-    assert.equals(inicial + extra, mochila.capacidad())
+  test "La Mochila inicia con capacidad disponible" {
+    assert.that(mochila.tieneCapacidad())
   }
   
-  test "Se conocen los artefactos que hay en la mochila" {
-    self.llenarMochila()
-    
-    assert.equals(#{espadaDelDestino, libroDeHechizos}, mochila.artefactos())
+  test "La Mochila describe su capacidad" {
+    assert.equals(capacidadInicial, mochila.capacidad())
   }
   
-  test "Con capacidad, la mochila guarda un artefacto" {
-    mochila.guardarArtefacto(espadaDelDestino)
+  test "La Mochila inicia con la capacidad correcta" {
+    assert.equals(capacidadInicial, mochila.capacidad())
+  }
+  
+  test "La Mochila establece su capacidad" {
+    mochila.capacidad(10)
+    
+    assert.equals(10, mochila.capacidad())
+  }
+  
+  test "La Mochila establece su capacidad en negativo y hay error" {
+    assert.throwsExceptionWithMessage(
+      "No se puede configurar una capacidad negativa",
+      { mochila.capacidad(-10) }
+    )
+  }
+  
+  test "La Mochila incrementa su capacidad" {
+    mochila.incrementarCapacidad(3)
+    
+    assert.equals(capacidadInicial + 3, mochila.capacidad())
+  }
+  
+  test "La Mochila incrementa su capacidad con un valor negativo y hay error" {
+    assert.throwsExceptionWithMessage(
+      "La capacidad a incrementar no puede ser negativa",
+      { mochila.incrementarCapacidad(-3) }
+    )
+  }
+  
+  test "La Mochila indica si posee Artefactos" {
+    assert.notThat(mochila.poseeArtefactos())
+  }
+  
+  test "La Mochila describe sus Artefactos" {
+    assert.equals(#{}, mochila.artefactos())
+  }
+  
+  test "La Mochila inicia sin Artefactos" {
+    assert.notThat(mochila.poseeArtefactos())
+    assert.equals(0, mochila.artefactos().size())
+  }
+  
+  test "Con capacidad disponible, la Mochila guarda un Artefacto" {
+    mochila.guardar(espadaDelDestino)
     
     assert.that(mochila.artefactos().contains(espadaDelDestino))
   }
   
-  test "Sin capacidad, la mochila guarda un artefacto y hay error" {
+  test "Sin capacidad disponible, la Mochila guarda un Artefacto y hay error" {
     self.llenarMochila()
     
     assert.throwsExceptionWithMessage(
-      "La mochila no tiene capacidad para un nuevo artefacto",
-      { mochila.guardarArtefacto(collarDivino) }
+      "La mochila no tiene capacidad para guardar un nuevo artefacto",
+      { mochila.guardar(collarDivino) }
     )
   }
   
-  test "Se conocen los artefactos que hay en la mochila de Rolando" {
-    self.llenarMochilaDeRolando()
+  test "Rolando establece la capacidad de su Mochila" {
+    rolando.capacidadMochila(10)
     
-    assert.equals(
-      #{espadaDelDestino, libroDeHechizos},
-      rolando.artefactosEnMochila()
+    assert.equals(10, mochila.capacidad())
+  }
+  
+  test "Rolando establece la capacidad de su Mochila en negativo y hay error" {
+    assert.throwsExceptionWithMessage(
+      "No se puede configurar una capacidad negativa",
+      { rolando.capacidadMochila(-10) }
     )
   }
   
-  test "Con capacidad en la mochila, Rolando encuentra un artefacto y lo recolecta" {
+  test "Rolando incrementa la capacidad de su Mochila" {
+    rolando.incrementarCapacidadMochila(3)
+    
+    assert.equals(capacidadInicial + 3, mochila.capacidad())
+  }
+  
+  test "Rolando incrementa la capacidad de su Mochila con un valor negativo y hay error" {
+    assert.throwsExceptionWithMessage(
+      "La capacidad a incrementar no puede ser negativa",
+      { rolando.incrementarCapacidadMochila(-3) }
+    )
+  }
+  
+  test "Rolando describe los Artefactos que posee en su Mochila" {
+    assert.equals(#{}, rolando.posesionesEnMochila())
+  }
+  
+  test "Rolando inicia sin Artefactos en su Mochila" {
+    assert.equals(0, rolando.posesionesEnMochila().size())
+  }
+  
+  test "Con capacidad disponible en su Mochila, Rolando recolecta un Artefacto" {
+    rolando.recolectar(espadaDelDestino)
+    
+    assert.that(rolando.posesionesEnMochila().contains(espadaDelDestino))
+  }
+  
+  test "Sin capacidad disponible en su Mochila, Rolando recolecta un Artefacto y hay error" {
+    self.llenarMochila()
+    
+    assert.throwsExceptionWithMessage(
+      "La mochila no tiene capacidad para recolectar un nuevo artefacto",
+      { rolando.recolectar(collarDivino) }
+    )
+  }
+  
+  test "Con capacidad disponible en su Mochila, Rolando encuentra un Artefacto y lo recolecta" {
     rolando.encontrar(espadaDelDestino)
     
-    assert.that(rolando.artefactosEnMochila().contains(espadaDelDestino))
+    assert.that(rolando.posesionesEnMochila().contains(espadaDelDestino))
   }
   
-  test "Con la mochila llena, Rolando encuentra un artefacto y no lo recolecta" {
-    self.llenarMochilaDeRolando()
+  test "Sin capacidad disponible en su Mochila, Rolando encuentra un Artefacto y no lo recolecta" {
+    self.llenarMochila()
     
     rolando.encontrar(collarDivino)
     
-    assert.notThat(rolando.artefactosEnMochila().contains(collarDivino))
-  }
-  
-  test "Con la mochila llena, Rolando recolecta un artefacto y hay error" {
-    self.llenarMochilaDeRolando()
-    
-    assert.throwsExceptionWithMessage(
-      "La mochila no tiene capacidad para un nuevo artefacto",
-      { rolando.recolectar(collarDivino) }
-    )
+    assert.notThat(rolando.posesionesEnMochila().contains(collarDivino))
   }
 }
 
 describe "1.2 - Castillo de piedra" {
-  test "El Castillo de piedra inicia sin artefactos" {
-    assert.equals(0, castilloDePiedra.artefactos().size())
+  const mochila = mochilaDeRolando
+  const hogar = castilloDePiedra
+  
+  method llenarMochila() {
+    mochila.guardar(espadaDelDestino)
+    mochila.guardar(libroDeHechizos)
   }
   
-  test "Se conocen los artefactos que hay en el Castillo de piedra" {
-    castilloDePiedra.guardarArtefacto(espadaDelDestino)
-    castilloDePiedra.guardarArtefacto(libroDeHechizos)
+  test "El Castillo describe sus Artefactos" {
+    assert.equals(#{}, hogar.artefactos())
+  }
+  
+  test "El Castillo inicia sin Artefactos" {
+    assert.equals(0, hogar.artefactos().size())
+  }
+  
+  test "El Castillo guarda un Artefacto" {
+    hogar.guardar(espadaDelDestino)
+    
+    assert.that(hogar.artefactos().contains(espadaDelDestino))
+  }
+  
+  test "El Castillo guarda varios Artefactos" {
+    hogar.guardarArtefactos(#{espadaDelDestino, libroDeHechizos})
+    
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, hogar.artefactos())
+  }
+  
+  test "La Mochila elimina sus Artefactos" {
+    self.llenarMochila()
+    
+    mochila.vaciar()
+    
+    assert.notThat(mochila.poseeArtefactos())
+  }
+  
+  test "Rolando describe los Artefactos que posee en su Hogar" {
+    assert.equals(#{}, rolando.posesionesEnHogar())
+  }
+  
+  test "Rolando inicia sin Artefactos en su Hogar" {
+    assert.equals(0, rolando.posesionesEnHogar().size())
+  }
+  
+  test "Rolando deja los Artefactos de su Mochila en su Hogar" {
+    self.llenarMochila()
+    
+    rolando.dejarArtefactos()
     
     assert.equals(
       #{espadaDelDestino, libroDeHechizos},
-      castilloDePiedra.artefactos()
+      rolando.posesionesEnHogar()
     )
+    assert.equals(0, rolando.posesionesEnMochila().size())
   }
   
-  test "El castillo de piedra guarda un artefacto" {
-    castilloDePiedra.guardarArtefacto(espadaDelDestino)
+  test "Con Artefactos en su Mochila, Rolando llega a su Hogar y los deja en él" {
+    self.llenarMochila()
     
-    assert.that(castilloDePiedra.artefactos().contains(espadaDelDestino))
-  }
-  
-  test "El castillo de piedra guarda varios artefactos" {
-    castilloDePiedra.guardarArtefactos(#{espadaDelDestino, libroDeHechizos})
-    
-    assert.equals(
-      #{espadaDelDestino, libroDeHechizos},
-      castilloDePiedra.artefactos()
-    )
-  }
-  
-  test "Se conocen los artefactos que hay en el hogar de Rolando" {
-    rolando.encontrar(espadaDelDestino)
-    rolando.encontrar(libroDeHechizos)
     rolando.llegarAlHogar()
     
     assert.equals(
       #{espadaDelDestino, libroDeHechizos},
-      rolando.artefactosEnHogar()
+      rolando.posesionesEnHogar()
     )
-  }
-  
-  test "Rolando llega al hogar con un artefacto y lo guarda en él" {
-    rolando.encontrar(espadaDelDestino)
-    
-    rolando.llegarAlHogar()
-    
-    assert.that(rolando.artefactosEnHogar().contains(espadaDelDestino))
-  }
-  
-  test "Rolando llega al hogar con un artefacto y vacía la mochila" {
-    rolando.encontrar(espadaDelDestino)
-    
-    rolando.llegarAlHogar()
-    
-    assert.that(rolando.artefactosEnMochila().isEmpty())
+    assert.equals(0, rolando.posesionesEnMochila().size())
   }
 }
 
 describe "1.3 - Saber qué artefactos tiene Rolando" {
-  test "Se conocen los artefactos que posee" {
-    rolando.encontrar(espadaDelDestino)
-    rolando.encontrar(libroDeHechizos)
-    rolando.llegarAlHogar()
-    rolando.encontrar(collarDivino)
-    
-    assert.equals(
-      #{espadaDelDestino, libroDeHechizos, collarDivino},
-      rolando.posesiones()
-    )
+  test "Rolando describe los Artefactos que posee" {
+    assert.equals(#{}, rolando.posesiones())
   }
   
-  test "Se sabe si posee un artefacto" {
+  test "Rolando inicia sin Artefactos" {
+    assert.equals(0, rolando.posesiones().size())
+  }
+  
+  test "Rolando indica si posee un Artefacto" {
     rolando.encontrar(espadaDelDestino)
     
     assert.that(rolando.posee(espadaDelDestino))
-  }
-  
-  test "Se sabe si no posee un artefacto" {
-    assert.notThat(rolando.posee(espadaDelDestino))
+    assert.notThat(rolando.posee(libroDeHechizos))
   }
 }
 
-describe "1.4 - Saber la historia de los encuentros con los artefactos" {
-  test "El historial inicia sin artefactos" {
+describe "1.4 - Saber la historia de los encuentros con los Artefactos" {
+  const mochila = mochilaDeRolando
+  const historial = historialDeEncuentros
+  
+  method llenarMochila() {
+    mochila.guardar(espadaDelDestino)
+    mochila.guardar(libroDeHechizos)
+  }
+  
+  test "El Historial de Encuentros describe sus Artefactos" {
+    assert.equals([], historial.artefactos())
+  }
+  
+  test "El Historial de Encuentros inicia sin Artefactos" {
     assert.equals(0, historial.artefactos().size())
   }
   
-  test "Se conocen los artefactos que hay en el historial" {
+  test "El Historial de Encuentros registra un Artefacto" {
+    historial.registrar(espadaDelDestino)
+    
+    assert.that(historial.artefactos().contains(espadaDelDestino))
+  }
+  
+  test "El Historial de Encuentros registra un mismo Artefacto más de una vez" {
+    historial.registrar(espadaDelDestino)
+    historial.registrar(espadaDelDestino)
+    
+    assert.equals(2, historial.artefactos().occurrencesOf(espadaDelDestino))
+  }
+  
+  test "El Historial de Encuentros registra Artefactos en orden" {
     historial.registrar(espadaDelDestino)
     historial.registrar(libroDeHechizos)
-    
-    assert.equals([espadaDelDestino, libroDeHechizos], historial.artefactos())
-  }
-  
-  test "Se registra un artefacto en el historial" {
-    historial.registrar(libroDeHechizos)
-    
-    assert.that(historial.artefactos().contains(libroDeHechizos))
-  }
-  
-  test "Se conocen los artefactos que hay en el historial de encuentros de Rolando" {
-    rolando.encontrar(espadaDelDestino)
-    rolando.encontrar(libroDeHechizos)
-    rolando.encontrar(collarDivino)
-    rolando.llegarAlHogar()
-    rolando.encontrar(armaduraDeAceroValyrio)
-    rolando.encontrar(collarDivino)
+    historial.registrar(collarDivino)
     
     assert.equals(
-      [
-        espadaDelDestino,
-        libroDeHechizos,
-        collarDivino,
-        armaduraDeAceroValyrio,
-        collarDivino
-      ],
-      rolando.artefactosEnHistorial()
+      [espadaDelDestino, libroDeHechizos, collarDivino],
+      historial.artefactos()
+    )
+    assert.notEquals(
+      [espadaDelDestino, collarDivino, libroDeHechizos],
+      historial.artefactos()
+    )
+    assert.notEquals(
+      [libroDeHechizos, espadaDelDestino, collarDivino],
+      historial.artefactos()
+    )
+    assert.notEquals(
+      [libroDeHechizos, collarDivino, espadaDelDestino],
+      historial.artefactos()
+    )
+    assert.notEquals(
+      [collarDivino, libroDeHechizos, espadaDelDestino],
+      historial.artefactos()
+    )
+    assert.notEquals(
+      [collarDivino, espadaDelDestino, libroDeHechizos],
+      historial.artefactos()
     )
   }
   
-  test "Se encuentra un artefacto y se registra en el historial de encuentros de Rolando" {
+  test "Rolando describe los Artefactos registrados en su Historial de Encuentros" {
+    assert.equals([], rolando.historialDeEncuentros())
+  }
+  
+  test "Rolando inicia sin Artefactos registrados en su Historial de Encuentros" {
+    assert.equals(0, rolando.historialDeEncuentros().size())
+  }
+  
+  test "Con capacidad disponible en su Mochila, Rolando encuentra un Artefacto y lo registra en su Historial de Encuentros" {
     rolando.encontrar(espadaDelDestino)
     
-    assert.that(rolando.artefactosEnHistorial().contains(espadaDelDestino))
+    assert.that(rolando.historialDeEncuentros().contains(espadaDelDestino))
+  }
+  
+  test "Sin capacidad disponible en su Mochila, Rolando encuentra un Artefacto y lo registra en su Historial de Encuentros" {
+    self.llenarMochila()
+    
+    rolando.encontrar(collarDivino)
+    
+    assert.that(rolando.historialDeEncuentros().contains(collarDivino))
+  }
+
+  test "Rolando encuentra un mismo Artefacto más de una vez y lo registra más de una vez en su Historial de Encuentros" {
+    self.llenarMochila()
+
+    rolando.encontrar(collarDivino)
+    rolando.encontrar(collarDivino)
+
+    assert.equals(2, rolando.historialDeEncuentros().occurrencesOf(collarDivino))
+  }
+
+  test "Rolando encuentra Artefactos y los registra en su Historial de Encuentros en orden" {
+    rolando.encontrar(espadaDelDestino)
+    rolando.encontrar(libroDeHechizos)
+    rolando.encontrar(collarDivino)
+    
+    assert.equals(
+      [espadaDelDestino, libroDeHechizos, collarDivino],
+      rolando.historialDeEncuentros()
+    )
+    assert.notEquals(
+      [espadaDelDestino, collarDivino, libroDeHechizos],
+      rolando.historialDeEncuentros()
+    )
+    assert.notEquals(
+      [libroDeHechizos, espadaDelDestino, collarDivino],
+      rolando.historialDeEncuentros()
+    )
+    assert.notEquals(
+      [libroDeHechizos, collarDivino, espadaDelDestino],
+      rolando.historialDeEncuentros()
+    )
+    assert.notEquals(
+      [collarDivino, libroDeHechizos, espadaDelDestino],
+      rolando.historialDeEncuentros()
+    )
+    assert.notEquals(
+      [collarDivino, espadaDelDestino, libroDeHechizos],
+      rolando.historialDeEncuentros()
+    )
   }
 }

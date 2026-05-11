@@ -1,4 +1,4 @@
-object historial {
+object historialDeEncuentros {
   const property artefactos = []
   
   method registrar(artefacto) {

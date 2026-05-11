@@ -4,36 +4,48 @@ import artefacto.*
 import historial.*
 
 object rolando {
-  const mochilaContenedora = mochila
+  const mochila = mochilaDeRolando
   const hogar = castilloDePiedra
-  const historialDeEncuentros = historial
+  const historial = historialDeEncuentros
   
-  method artefactosEnMochila() = mochilaContenedora.artefactos()
+  method posesionesEnMochila() = mochila.artefactos()
+  
+  method posesionesEnHogar() = hogar.artefactos()
 
-  method artefactosEnHogar() = hogar.artefactos() 
-
-  method artefactosEnHistorial() = historialDeEncuentros.artefactos()
+  method historialDeEncuentros() = historial.artefactos()
+  
+  method capacidadMochila(_capacidad) {
+    mochila.capacidad(_capacidad)
+  }
+  
+  method incrementarCapacidadMochila(capacidadExtra) {
+    mochila.incrementarCapacidad(capacidadExtra)
+  }
   
   method encontrar(artefacto) {
-    if (mochilaContenedora.tieneCapacidad()) self.recolectar(artefacto)
+    if (mochila.tieneCapacidad()) self.recolectar(artefacto)
     
-    historialDeEncuentros.registrar(artefacto)
+    historial.registrar(artefacto)
   }
   
   method recolectar(artefacto) {
-    mochilaContenedora.guardarArtefacto(artefacto)
+    if (not mochila.tieneCapacidad()) self.error(
+        "La mochila no tiene capacidad para recolectar un nuevo artefacto"
+      )
+    
+    mochila.guardar(artefacto)
   }
   
   method llegarAlHogar() {
-    if (mochilaContenedora.tieneArtefactos()) self.dejarArtefactos()
+    if (mochila.poseeArtefactos()) self.dejarArtefactos()
   }
   
   method dejarArtefactos() {
-    hogar.guardarArtefactos(mochilaContenedora.artefactos())
-    mochilaContenedora.vaciar()
+    hogar.guardarArtefactos(mochila.artefactos())
+    mochila.vaciar()
   }
-
-  method posesiones() = self.artefactosEnMochila() + self.artefactosEnHogar()
+  
+  method posesiones() = self.posesionesEnMochila() + self.posesionesEnHogar()
   
   method posee(artefacto) = self.posesiones().contains(artefacto)
 }
