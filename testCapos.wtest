@@ -1,5 +1,3 @@
-// commit -m "Refactorización de objetos para mantener coherencia y estructura de tests antes de resolver Parte 2"
-
 import capos.*
 import artefacto.*
 import mochila.*
