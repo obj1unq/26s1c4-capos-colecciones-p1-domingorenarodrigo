@@ -17,11 +17,12 @@ describe "1.1 - Rolando" {
     assert.that(mochila.tieneCapacidad())
   }
   
+  test "La Mochila describe su capacidad" {
+    assert.equals(capacidadInicial, mochila.capacidad())
+  }
+
   test "La Mochila inicia con capacidad disponible" {
     assert.that(mochila.tieneCapacidad())
-  }
-  
-  test "La Mochila describe su capacidad" {
     assert.equals(capacidadInicial, mochila.capacidad())
   }
   
@@ -116,14 +117,23 @@ describe "1.1 - Rolando" {
   test "Rolando inicia sin Artefactos en su Mochila" {
     assert.equals(0, rolando.posesionesEnMochila().size())
   }
-  
-  test "Con capacidad disponible en su Mochila, Rolando recolecta un Artefacto" {
+
+  test "Rolando indica si puede recolectar un Artefacto" {
+    assert.that(rolando.puedeRecolectar())
+  }
+
+  test "Rolando inicia con posibilidad de recolectar un Artefacto" {
+    assert.that(rolando.puedeRecolectar())
+  }
+      Interpretación de estado en base a respuesta a consulta Rolando.puedeRecolectar()
+
+  test "Con posibilidad de recolectar un Artefacto, Rolando recolecta un Artefacto" {
     rolando.recolectar(espadaDelDestino)
     
     assert.that(rolando.posesionesEnMochila().contains(espadaDelDestino))
   }
   
-  test "Sin capacidad disponible en su Mochila, Rolando recolecta un Artefacto y hay error" {
+  test "Sin posibilidad de recolectar un Artefacto, Rolando recolecta un Artefacto y hay error" {
     self.llenarMochila()
     
     assert.throwsExceptionWithMessage(
@@ -132,13 +142,13 @@ describe "1.1 - Rolando" {
     )
   }
   
-  test "Con capacidad disponible en su Mochila, Rolando encuentra un Artefacto y lo recolecta" {
+  test "Con posibilidad de recolectar un Artefacto, Rolando encuentra un Artefacto y lo recolecta" {
     rolando.encontrar(espadaDelDestino)
     
     assert.that(rolando.posesionesEnMochila().contains(espadaDelDestino))
   }
   
-  test "Sin capacidad disponible en su Mochila, Rolando encuentra un Artefacto y no lo recolecta" {
+  test "Sin posibilidad de recolectar un Artefacto, Rolando encuentra un Artefacto y no lo recolecta" {
     self.llenarMochila()
     
     rolando.encontrar(collarDivino)
@@ -303,13 +313,13 @@ describe "1.4 - Saber la historia de los encuentros con los Artefactos" {
     assert.equals(0, rolando.historialDeEncuentros().size())
   }
   
-  test "Con capacidad disponible en su Mochila, Rolando encuentra un Artefacto y lo registra en su Historial de Encuentros" {
+  test "Con posibilidad de recolectar un Artefacto, Rolando encuentra un Artefacto y lo registra en su Historial de Encuentros" {
     rolando.encontrar(espadaDelDestino)
     
     assert.that(rolando.historialDeEncuentros().contains(espadaDelDestino))
   }
   
-  test "Sin capacidad disponible en su Mochila, Rolando encuentra un Artefacto y lo registra en su Historial de Encuentros" {
+  test "Sin posibilidad de recolectar un Artefacto, Rolando encuentra un Artefacto y lo registra en su Historial de Encuentros" {
     self.llenarMochila()
     
     rolando.encontrar(collarDivino)

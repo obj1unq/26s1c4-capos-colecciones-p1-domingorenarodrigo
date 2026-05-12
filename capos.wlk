@@ -23,13 +23,15 @@ object rolando {
   }
   
   method encontrar(artefacto) {
-    if (mochila.tieneCapacidad()) self.recolectar(artefacto)
+    if (self.puedeRecolectar()) self.recolectar(artefacto)
     
     historial.registrar(artefacto)
   }
+
+  method puedeRecolectar() = mochila.tieneCapacidad()
   
   method recolectar(artefacto) {
-    if (not mochila.tieneCapacidad()) self.error(
+    if (not self.puedeRecolectar()) self.error(
         "La mochila no tiene capacidad para recolectar un nuevo artefacto"
       )
     
