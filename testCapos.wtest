@@ -133,7 +133,6 @@ describe "1.1 - Rolando" {
   test "Rolando inicia con posibilidad de recolectar un Artefacto" {
     assert.that(rolando.puedeRecolectar())
   }
-      Interpretación de estado en base a respuesta a consulta Rolando.puedeRecolectar()
 
   test "Con posibilidad de recolectar un Artefacto, Rolando recolecta un Artefacto" {
     rolando.recolectar(espadaDelDestino)
