@@ -23,13 +23,15 @@ object mochilaDeRolando {
   method poseeArtefactos() = not artefactos.isEmpty()
   
   method guardar(artefacto) {
-    if (not self.tieneCapacidad()) self.error(
+    if (not self.puedeGuardar()) self.error(
         "La mochila no tiene capacidad para guardar un nuevo artefacto"
       )
     
     artefactos.add(artefacto)
   }
-   
+  
+  method puedeGuardar() = self.tieneCapacidad()
+
   method vaciar() {
     artefactos.clear()
   }

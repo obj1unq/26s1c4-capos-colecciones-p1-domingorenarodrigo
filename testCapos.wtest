@@ -69,13 +69,21 @@ describe "1.1 - Rolando" {
     assert.equals(0, mochila.artefactos().size())
   }
   
-  test "Con capacidad disponible, la Mochila guarda un Artefacto" {
+  test "La Mochila indica si puede guardar un Artefacto" {
+    assert.that(mochila.puedeGuardar())
+  }
+
+  test "La Mochila inicia con posibilidad de guardar un Artefacto" {
+    assert.that(mochila.puedeGuardar())
+  }
+
+  test "Con posibilidad de guardar un Artefacto, la Mochila guarda un Artefacto" {
     mochila.guardar(espadaDelDestino)
     
     assert.that(mochila.artefactos().contains(espadaDelDestino))
   }
   
-  test "Sin capacidad disponible, la Mochila guarda un Artefacto y hay error" {
+  test "Sin posibilidad de guardar un Artefacto, la Mochila guarda un Artefacto y hay error" {
     self.llenarMochila()
     
     assert.throwsExceptionWithMessage(
