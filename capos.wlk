@@ -7,11 +7,12 @@ object rolando {
   const mochila = mochilaDeRolando
   const hogar = castilloDePiedra
   const historial = historialDeEncuentros
+  var property poderBase = 5
   
   method posesionesEnMochila() = mochila.artefactos()
   
   method posesionesEnHogar() = hogar.artefactos()
-
+  
   method historialDeEncuentros() = historial.artefactos()
   
   method capacidadMochila(_capacidad) {
@@ -21,13 +22,29 @@ object rolando {
   method incrementarCapacidadMochila(capacidadExtra) {
     mochila.incrementarCapacidad(capacidadExtra)
   }
+
+    method poderBase(_poderBase) {
+    if (_poderBase < 0) self.error(
+        "No se puede configurar un poder base negativo"
+      )
+    
+    poderBase = _poderBase
+  }
+  
+  method incrementarPoderBase(poderExtra) {
+    if (poderExtra < 0) self.error(
+        "El poder a incrementar no puede ser negativo"
+      )
+    
+    poderBase += poderExtra
+  }
   
   method encontrar(artefacto) {
     if (self.puedeRecolectar()) self.recolectar(artefacto)
     
     historial.registrar(artefacto)
   }
-
+  
   method puedeRecolectar() = mochila.tieneCapacidad()
   
   method recolectar(artefacto) {
@@ -43,7 +60,7 @@ object rolando {
   }
   
   method dejarArtefactos() {
-    hogar.guardarArtefactos(mochila.artefactos())
+    hogar.guardarArtefactos(self.posesionesEnMochila())
     mochila.vaciar()
   }
   

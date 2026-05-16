@@ -20,7 +20,7 @@ describe "1.1 - Rolando" {
   test "La Mochila describe su capacidad" {
     assert.equals(capacidadInicial, mochila.capacidad())
   }
-
+  
   test "La Mochila inicia con capacidad disponible" {
     assert.that(mochila.tieneCapacidad())
     assert.equals(capacidadInicial, mochila.capacidad())
@@ -72,11 +72,11 @@ describe "1.1 - Rolando" {
   test "La Mochila indica si puede guardar un Artefacto" {
     assert.that(mochila.puedeGuardar())
   }
-
+  
   test "La Mochila inicia con posibilidad de guardar un Artefacto" {
     assert.that(mochila.puedeGuardar())
   }
-
+  
   test "Con posibilidad de guardar un Artefacto, la Mochila guarda un Artefacto" {
     mochila.guardar(espadaDelDestino)
     
@@ -125,15 +125,15 @@ describe "1.1 - Rolando" {
   test "Rolando inicia sin Artefactos en su Mochila" {
     assert.equals(0, rolando.posesionesEnMochila().size())
   }
-
+  
   test "Rolando indica si puede recolectar un Artefacto" {
     assert.that(rolando.puedeRecolectar())
   }
-
+  
   test "Rolando inicia con posibilidad de recolectar un Artefacto" {
     assert.that(rolando.puedeRecolectar())
   }
-
+  
   test "Con posibilidad de recolectar un Artefacto, Rolando recolecta un Artefacto" {
     rolando.recolectar(espadaDelDestino)
     
@@ -333,16 +333,19 @@ describe "1.4 - Saber la historia de los encuentros con los Artefactos" {
     
     assert.that(rolando.historialDeEncuentros().contains(collarDivino))
   }
-
+  
   test "Rolando encuentra un mismo Artefacto más de una vez y lo registra más de una vez en su Historial de Encuentros" {
     self.llenarMochila()
-
+    
     rolando.encontrar(collarDivino)
     rolando.encontrar(collarDivino)
-
-    assert.equals(2, rolando.historialDeEncuentros().occurrencesOf(collarDivino))
+    
+    assert.equals(
+      2,
+      rolando.historialDeEncuentros().occurrencesOf(collarDivino)
+    )
   }
-
+  
   test "Rolando encuentra Artefactos y los registra en su Historial de Encuentros en orden" {
     rolando.encontrar(espadaDelDestino)
     rolando.encontrar(libroDeHechizos)
@@ -371,6 +374,44 @@ describe "1.4 - Saber la historia de los encuentros con los Artefactos" {
     assert.notEquals(
       [collarDivino, espadaDelDestino, libroDeHechizos],
       rolando.historialDeEncuentros()
+    )
+  }
+}
+
+describe "2.1 - Comportamiento de los artefactos" {
+  const poderBaseInicial = 5
+  
+  test "Rolando describe su poder base" {
+    assert.equals(poderBaseInicial, rolando.poderBase())
+  }
+  
+  test "Rolando inicia con el poder base correcto" {
+    assert.equals(poderBaseInicial, rolando.poderBase())
+  }
+  
+  test "Rolando establece su poder base" {
+    rolando.poderBase(10)
+    
+    assert.equals(10, rolando.poderBase())
+  }
+  
+  test "Rolando establece su poder base en negativo y hay error" {
+    assert.throwsExceptionWithMessage(
+      "No se puede configurar un poder base negativo",
+      { rolando.poderBase(-10) }
+    )
+  }
+  
+  test "Rolando incrementa su poder base" {
+    rolando.incrementarPoderBase(3)
+    
+    assert.equals(poderBaseInicial + 3, rolando.poderBase())
+  }
+  
+  test "Rolando incrementa su poder base con un valor negativo y hay error" {
+    assert.throwsExceptionWithMessage(
+      "El poder a incrementar no puede ser negativo",
+      { rolando.incrementarPoderBase(-3) }
     )
   }
 }
